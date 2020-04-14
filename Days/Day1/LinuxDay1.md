@@ -25,7 +25,7 @@
   - RHEL 6 - GRUB 0.9
   - RHEL 7 - GRUB 2.0
 - ### init vs. systemd
-  RHEL 6 uses init and RHEL 7 uses [systemd](https://www.linode.com/docs/quick-answers/linux-essentials/what-is-systemd/).
+  RHEL 6 uses init and RHEL 7 uses [systemd](https://www.linode.com/docs/quick-answers/linux-essentials/what-is-systemd/).  
   ![init vs systemd](https://imgur.com/LSJrIWb.png)
 - ### HFS - Heirarchial File System 
   - `/bin` - binaries for normal users
@@ -64,7 +64,7 @@
    - Virtualization host
    - Server with GUI - install everything
 7. Select Server with GUI and choose to install all the packages
-8. Choose a computer name in the localhost text entry
+8. Choose a computer name in the localhost text entry  
    ![Imgur](https://i.imgur.com/SiERfR9.png)  
 9. Setup networking details by manually assigning IP
 10. Select installation medium  
