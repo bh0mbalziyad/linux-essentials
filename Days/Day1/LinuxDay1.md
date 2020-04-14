@@ -196,4 +196,52 @@ To check permissions
 - Column 7
   > Name of file/dir
   
+To change permissions
+> `chmod <perms> -[arguments] file/dir`
+> The permissions can be either 3 octal numbers or alphabet based
+> u - user
+> g - group
+> o - others
+> r - read, w - write, x - execute
+> 4 - read, 2 - write, 1 - execute
+> `chmod 666 <file>` - r,w for u,g and o
+> `chmod 700 <file>` - r,w for u and - for g and o
+> `chmod g+r,w <file>` - gave r,w to g
+> = - assigns new values
+> \+ - appends to existing permissions
 
+---
+# Part 6 - User management
+---
+Important Files
+- `/etc/passwd` 7 columns-  
+  >1. username
+  >2. referenced password
+  >3. userID
+  >4. groupID
+  >5. User GECOS - can be changed with `chfn`
+  >6. Default Home Dir for user
+  >7. Default Shell of the user
+- `/etc/shadow` 9 Columns
+  > 1. Login name
+  > 2. Encrypted password
+  > Encrypted with (MD5 or SHA512)
+  > \$6 - SHA512
+  > \$1 - MD5
+  > To change algo use `authconfig --passalgo=md5/sha512 --update`
+  > To check algo use `authconfig --test | grep hashing`
+  > 3. Last password change in number of days since 1st Jan 1970
+  > 4. Minimum password age in days ( if 1 then password can't be changed for 1 day)
+  > 5. Maximum password age in days (default is 99999 days ~ 273 years)
+  > 6. Warning days from which you start getting a prompt to change your password
+  > 7. Inactive (if kept 1 then you can still log in for 1 day after your password has expired)
+  > 8. Account Expiry - ???
+  > 9. Not used till date - ???
+  
++ Creating a user
+  +  `useradd <options> <username>` 
++ Modify a user
+  + `usermod <options> <username>`
++ Delete a user
+  + Partial Deletion
+  + Full Deletion
