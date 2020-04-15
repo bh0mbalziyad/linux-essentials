@@ -106,7 +106,7 @@ noarch - supports both 32 and 64 bit
 
 ## yum
 ### Setting up yum  
-1. Stop firewall and turn off SELinux
+1. Stop firewall and turn off SELinux  
    `systemctl stop firewalld`  
    `setenforce 0`  
 2. Check whether follwing packages are installed  
@@ -140,3 +140,52 @@ noarch - supports both 32 and 64 bit
    yum update all  
    yum repolist  
    ```  
+### Installing with yum
+`yum install <package-name>`  
+or  
+`yum install -y <package-name>`  
+### Querying with yum
+`yum info <package-name>`  
+### Querying with yum
+`yum update <package-name>` to update specific packages  
+or  
+`yum update` to update all the packages  
+### Removing with yum  
+`yum remove <package-name>`  
+
+---
+## Part 4 - Partitioning
+---
+### Simple Partitioning  
+1. create paritions on physical disks using `fdisk /dev/sd[a-z]`  ![partitions](https://imgur.com/hH3hat0.png)  
+2. Put a file system on the disk using `mkfs`  ![FS on LV1](https://imgur.com/mdDLUgS.png)  
+3. Create a mount point for the partition using `mkdir <dirname>`  
+4. mount the partition  
+   - Permanent - editing `/etc/fstab` file  ![fstab](https://imgur.com/eW599i8.png)  
+   - Temporary - using `mount` and `umount`  ![manual](https://imgur.com/AtSxRQj.png)  
+
+### Logical Volumne Management (LVM)  
+![LVM Intro](https://imgur.com/xogjVFM.png)
+- Format disks with `fdisk`  
+- pv - `pvcreate`, `pvdisplay`, `pvremove`  
+- vg - `vgcreate`, `vgdisplay`, `vgremove`
+- lv -  `lvcreate`, `lvs/lvdisplay`, `lvremove`
+
+
+1. create paritions on physical disks using `fdisk /dev/sd[a-z]`  
+![partitions](https://imgur.com/hH3hat0.png)  
+2. `pvcreate /dev/sd[a-z][0-9] ...` to create physical volumes from partitions  ![pvcreate](https://imgur.com/pQDWn6s.png)  
+3. `pvdisplay` to check creation of physical volume  ![pvdisplay](https://imgur.com/n6Al4VP.png)  
+4. `vgcreate <volume-group-name> <pv-names>`  ![vgcreate](https://imgur.com/amIiexL.png)  
+5. `lvcreate -n <lv-name> -L <length/size> <vg-name>`  ![LV creation](https://imgur.com/Y9hqNWJ.png)  
+6. make a filesystem on the logical volumne  ![FS on LV1](https://imgur.com/mdDLUgS.png)  
+7. create a mount point using `mkdir <dirname>`  
+8. mount the volume  
+   - Permanent - editing `/etc/fstab` file  ![fstab](https://imgur.com/eW599i8.png)  
+   - Temporary - using `mount` and `umount`  ![manual](https://imgur.com/AtSxRQj.png)  
+
+### RAID
+1. `yum install -y mdadm`  
+2. Format disks `/dev/sdd and /dev/sde` as shown above
+3. Change the parition's system id with `fdisk --> t` to `fd` which is *Linux raid autodetect*  ![](https://imgur.com/UTiDUBo.png)  
+![RAID Autodetect](https://imgur.com/ZjbKRSu.png)  
