@@ -35,7 +35,7 @@
   - `/kernel` - ???
   - `/mnt` - temporary mount points
   - `/dev` - device files
-  - `/run` - ???
+  - `/run` - similar to `/mnt` in other distros
   - `/tmp` - temporary files
   - `/var` - primarily contains log files
   - `/lib or /libx64` -  library files

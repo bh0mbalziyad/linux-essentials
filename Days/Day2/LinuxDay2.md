@@ -39,4 +39,62 @@ You can also have custom aliases by add a line in the `/etc/sudoers` file above 
 
 ---
 ## Part 3 - Package Management
----
+---  
+## Source of installation
+- Local repo
+- Internet based repo
+
+Redhat DVD (Local, free)  
+Redhat Satellite Server (Online, paid)
+CentOS DVD (Local, free)
+CentOS Mirror Server (Online, free)  
+
+## Package Manager - install, remove, update packages  
+- RPM 
+  - Redhat Package Manager
+  - extensions : .rpm
+- YUM
+  - Yellowdog Update Manager
+  - A server that **needs to be installed**
+  - extensions : .rpm
+- APT 
+  - Advanced Packaging Tool
+  - extensions : .rpm, .deb, .dpkg
+- DPKG
+  - Debian package manager
+  - extensions : .deb, .dpkg
+
+## Naming convention of packages
+![zip](https://imgur.com/lThiqBI.png)  
+**zip** - name of package  
+**3.0** - major release/version  
+**10.el7** - minor version/release  
+**x86_64** - architecture of the package  
+**.rpm** - extension  
+
+## Architecture of packages  
+32 bit - i686
+64 bit - x86_64
+noarch - supports both 32 and 64 bit
+
+## Installtion using RPM
+`rpm -ivh <package-name>`  
+- i - install
+- v - verbose
+- h - hashing
+  > shows package installation completion bar
+  #######
+## Listing installed packages
+`rpm -q <package-name>`
+- q - query  
+
+`rpm -qa`  
+- a - all  
+
+## Updating packages
+`rpm -Uvh <packagename>`  
+- U - update  
+
+## Removing packages
+`rpm -ev <packagename>`
+- e - erase
