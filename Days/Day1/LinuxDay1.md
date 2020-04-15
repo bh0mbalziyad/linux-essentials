@@ -228,7 +228,7 @@ Important Files
   > Encrypted with (MD5 or SHA512)
   > \$6 - SHA512
   > \$1 - MD5
-  > To change algo use `authconfig --passalgo=md5/sha512 --update`
+  > To change algo use `authconfig --passalgo=[md5s|ha512] --update`
   > To check algo use `authconfig --test | grep hashing`
   > 3. Last password change in number of days since 1st Jan 1970
   > 4. Minimum password age in days ( if 1 then password can't be changed for 1 day)
@@ -240,8 +240,24 @@ Important Files
   
 + Creating a user
   +  `useradd <options> <username>` 
+  +  Creates entries in four files
+     - `/etc/passwd`
+     - `/etc/shadow`
+     - `/home/<username>`
+     - `/var/mail`  
 + Modify a user
   + `usermod <options> <username>`
 + Delete a user
   + Partial Deletion
+    - `userdel <username>`
+    - Only removes entries from `/etc/shadow` & `/etc/passwd`
   + Full Deletion
+    - `userdel -r <username>`
+    - Removes entries from all the places 
++ Creating a group
+  +  `groupadd <options> <groupname>`  
++ Modify a group  
+  + `groupmod <options> <groupname>`  
++ Delete a group  
+  + Partial Deletion  
+    - `groupdel <groupname>`  
