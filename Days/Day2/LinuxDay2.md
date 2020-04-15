@@ -40,7 +40,7 @@ You can also have custom aliases by add a line in the `/etc/sudoers` file above 
 ---
 ## Part 3 - Package Management
 ---  
-## Source of installation
+### Source of installation
 - Local repo
 - Internet based repo
 
@@ -49,7 +49,7 @@ Redhat Satellite Server (Online, paid)
 CentOS DVD (Local, free)
 CentOS Mirror Server (Online, free)  
 
-## Package Manager - install, remove, update packages  
+### Package Manager - install, remove, update packages  
 - RPM 
   - Redhat Package Manager
   - extensions : .rpm
@@ -64,7 +64,7 @@ CentOS Mirror Server (Online, free)
   - Debian package manager
   - extensions : .deb, .dpkg
 
-## Naming convention of packages
+### Naming convention of packages
 ![zip](https://imgur.com/lThiqBI.png)  
 **zip** - name of package  
 **3.0** - major release/version  
@@ -72,29 +72,71 @@ CentOS Mirror Server (Online, free)
 **x86_64** - architecture of the package  
 **.rpm** - extension  
 
-## Architecture of packages  
+### Architecture of packages  
 32 bit - i686
 64 bit - x86_64
 noarch - supports both 32 and 64 bit
 
-## Installtion using RPM
+### Installtion using RPM
 `rpm -ivh <package-name>`  
 - i - install
 - v - verbose
 - h - hashing
   > shows package installation completion bar
   #######
-## Listing installed packages
+### Listing installed packages
 `rpm -q <package-name>`
 - q - query  
 
 `rpm -qa`  
 - a - all  
 
-## Updating packages
+### Updating packages
 `rpm -Uvh <packagename>`  
 - U - update  
 
-## Removing packages
-`rpm -ev <packagename>`
-- e - erase
+### Removing packages  
+`rpm -ev <packagename>`  
+- e - erase  
+
+### Problems with RPM
+1. Full names of package is required
+2. Location of package is required
+3. Dependency issues - doesn't resolve dependencies automatically  
+
+## yum
+### Setting up yum  
+1. Stop firewall and turn off SELinux
+   `systemctl stop firewalld`  
+   `setenforce 0`  
+2. Check whether follwing packages are installed  
+   `rpm -q createrepo deltarpm python-deltarpm vsftpd`
+3. Create a local repo folder  
+   `mkdir /var/ftp/pub/yumserver`
+4. Copy contents from ISO/DVD into above folder  
+   `cp -var /path-to-DVD/* /var/ftp/pub/yumserver`
+5. Create yum/client answer file  
+   - remove files present in `/etc/yum.repos.d/`
+   - then run `vim <reponame>.repo` to create a new repo file  
+   - contents of the file will be in the following format
+   ``` yaml  
+    [reponame]  
+    name='Repo Label'  
+    baseurl=ftp://<your-ip-address>/pub/yumserver  
+    gpgcheck=0  
+    enabled=1  
+   ```
+6. Create indexes for packages  
+   `createrepo -v /var/ftp/pub/yumserver/`  
+7. Start vsftp daemon  
+   ```bash  
+   systemctl enable vsftpd  
+   systemctl start vsftpd  
+   systemctl status vsftpd  
+   ```  
+8. Clean, update and verify  
+   ```bash  
+   yum clean all  
+   yum update all  
+   yum repolist  
+   ```  
