@@ -62,3 +62,74 @@ To save rules use `iptables-save > /etc/iptables/rules.v4` (RHEL6)
 `firewall-cmd --reload` - reload changes made  
 `firewall-cmd --add-service=<service-name>  --permanent` - to add a service to the rules  
 `firewall-cmd --add-port=<portnumber>/<protocol-tcp/udp> --permanent` - to add a specific port number  
+`firwall-cmd --add-source=<range-ip-address> --permanent` - to allow IP range through firewall  
+
+---
+## Part 4 - NTP
+---  
+
+Required package - `ntp`  
+Config file - `/etc/ntp.conf`  
+1. Get time servers for your region from [here.](https://ntppool.org)  
+2. Add them to the config file with `vim /etc/ntp.conf` and comment out previous entries  
+![Init file](https://imgur.com/A7g0SlE.png)  
+![Changed file](https://imgur.com/hgwhMxj.png)  
+3. Add your IP range to allow systems on your network to act as time providers    
+![IP Range](https://imgur.com/jSxThcV.png)  
+4. Add `logfile /var/ntp/ntp.log` to capture ntp logs  
+5. Add service to firewall `firewall-cmd --add-service=ntp --permanent && firewall-cmd --reload`  
+6. Enable ntpd using `systemctl enable ntpd`  
+7. Start ntpd using `systemctl start ntpd`  
+8. To list servers which are providing you time sync use `ntpq -p`  
+9. To manually sync with a server use `ntpdate -u <server>`  
+
+---
+## Part 5 - DHCP  
+---
+Port no : 67,68  
+Packages : `dhcp`  
+![Setup](https://imgur.com/XNn9k5c.png)  
+1. Get default config file from `/usr/share/docs/dhcp-*/dhcpd.sample~` to `/etc/dhcp/dhcpd.conf`
+2. Change default server name `domain.com` on line 7  
+
+---
+## Part 6 - FTP
+---  
+### Insecure  
+Port no : 21  
+Packages : `ftp`, `vsftpd`  
+
+1. `yum install -y ftp vsftpd`  
+2. Enable, start and check status for `vsftpd`  
+3. Make ftp service and port entry in firewall
+   ```bash
+   firewall-cmd --add-port=21/tcp --permanent
+   firewall-cmd --add-port=20/tcp --permanent
+   firewall-cmd --add-service=ftp --permanent
+   firewall-cmd --reload
+   firewall-cmd --list-all
+   ```  
+4. Place files in the `/var/ftp` dir to setup files to serve  
+5. Now open firefox `firefox &` and visit `ftp://192.168.10.5` and voila! 
+
+
+### Secure  
+1. Make sure `vsftpd` is installed and running  
+2. Edit `/etc/vsftpd/vsftpd.conf`
+   ```conf
+   anonymous_allow=NO
+   userlist_file=/etc/userlist
+   userlist_deny=NO
+   userlist_enable=YES
+   ```
+3. Only users in `/etc/userlist` will now be able to access
+
+### FTP commands  
+`get <filename>` - download file from remote server to local machine  
+`put <filename>` - send file from local machine to remote server  
+`ls` - list files in server  
+`bye` - exit ftp server  
+
+---
+## Part 7 - SSH  
+---
