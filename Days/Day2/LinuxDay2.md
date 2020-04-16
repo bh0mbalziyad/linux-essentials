@@ -187,5 +187,16 @@ or
 ### RAID
 1. `yum install -y mdadm`  
 2. Format disks `/dev/sdd and /dev/sde` as shown above
-3. Change the parition's system id with `fdisk --> t` to `fd` which is *Linux raid autodetect*  ![](https://imgur.com/UTiDUBo.png)  
+3. Change the parition's system id with `fdisk --> t` to `fd` which is *Linux raid autodetect*  ![RAID autodetect](https://imgur.com/UTiDUBo.png)  
 ![RAID Autodetect](https://imgur.com/ZjbKRSu.png)  
+4. Examine the disks using `mdadm -e /dev/sdd /dev/sde`  
+5. Check existing RAID arrays using `cat /proc/mdstat`  
+6. Create a **RAID 0** array called `md0` with the command  
+   `mdadm --create --verbose /dev/md0 --level=0 --raid-devices=2 /dev/sdd /dev/sde`  ![Results](https://imgur.com/Slvipdw.png)
+7. Ensure that the RAID array was setup properly using `cat /proc/mdstat`  ![checkup](https://imgur.com/HnztCtk.png)
+8. Now create a filesystem on `/dev/md0` using `mkfs.xfs /dev/md0`  ![MKFS](https://imgur.com/GgVfoc5.png)  
+9. Create a mount point for it `mkdir -p /RAID/ar1` and mount it using `mount /dev/md0 /RAID/ar1`  ![MOUNT FS](https://imgur.com/3dK9xCD.png)  
+10. Check whether new space is available using `df -h`  ![DF](https://imgur.com/nRm2CHj.png)
+11. Save the array layout to `/etc/mdadm/mdadm.conf` so that your array is reassembled on the next reboot. You can do so using `mdadm --detail --scan | sudo tee -a /etc/mdadm/mdadm.conf`  
+12. Update `/etc/fstab` for persistence and auto-mounting  
+    `echo '/dev/md0 /RAID/ar1 xfs defaults,nofail,discard 0 0' | sudo tee -a /etc/fstab`  ![fstab](https://imgur.com/qlKpEEN.jpg)  
