@@ -146,7 +146,7 @@ or
 `yum install -y <package-name>`  
 ### Querying with yum
 `yum info <package-name>`  
-### Querying with yum
+### Updating with yum
 `yum update <package-name>` to update specific packages  
 or  
 `yum update` to update all the packages  

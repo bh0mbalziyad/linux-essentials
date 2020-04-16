@@ -86,25 +86,46 @@ Config file - `/etc/ntp.conf`
 ---
 ## Part 5 - DHCP  
 ---
-Port no : 67,68  
+Port no : 67/udp, 68/udp  
 Packages : `dhcp`  
 ![Setup](https://imgur.com/XNn9k5c.png)  
-1. Get default config file from `/usr/share/docs/dhcp-*/dhcpd.sample~` to `/etc/dhcp/dhcpd.conf`
-2. Change default server name `domain.com` on line 7  
+1. Install `dhcp` with `yum install dhcp -y` 
+1. Get default config file from `/usr/share/docs/dhcp-*/dhcpd.sample~` to `/etc/dhcp/dhcpd.conf`  
+2. Make the following changes  
+   ![Server name](https://imgur.com/CZySSQr.png)  
+   ![Scope](https://imgur.com/3naebUR.png)  
+3. Save changes and enable, restart and check status for `dhcpd`
+   ```bash
+   systemctl enable dhcpd  
+   systemctl start dhcpd  
+   systemctl status dhcpd  
+   ```
+4. Configure firewall to allow udp ports 67, 68 and dhcp service  
+   ```bash
+   firewall-cmd --add-port={67..68}/udp  
+   firewall-cmd --add-service=dhcp
+   firewall-cmd --reload
+   firewall-cmd --list-all
+   ```  
+5. Now head over to your client machine on the same subnet and change its settings so that it can use `dhcp`  
+   ![Settings](https://imgur.com/rpzNNxF.png)  
+   ![Result](https://imgur.com/6H5alwt.png)  
+6. To check lease information, use `cat /var/lib/dhcpd/dhcpd.leases`  
+   ![Leases](https://imgur.com/C6TlmwT.png)  
+
 
 ---
 ## Part 6 - FTP
 ---  
 ### Insecure  
-Port no : 21  
+Port no : 21/tcp, 20/tcp  
 Packages : `ftp`, `vsftpd`  
 
 1. `yum install -y ftp vsftpd`  
 2. Enable, start and check status for `vsftpd`  
 3. Make ftp service and port entry in firewall
    ```bash
-   firewall-cmd --add-port=21/tcp --permanent
-   firewall-cmd --add-port=20/tcp --permanent
+   firewall-cmd --add-port={20..21}/tcp --permanent
    firewall-cmd --add-service=ftp --permanent
    firewall-cmd --reload
    firewall-cmd --list-all
