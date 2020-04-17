@@ -117,17 +117,10 @@ Config file : `/etc/samba/smb.conf`
    useradd -G grp1 u3
    ```
 4. Provide passwords to the users using `passwd <username>`
-5. Create a directory to be shared `mkdir -p /samba`
-6. Change modifications `chown -R root:grp1 /samba`
-7. Open config file with `vim /etc/samba/smb.conf`
-   ```conf
-   [mysamba]
-   comment=this is samba shared directory
-   browseable=yes
-   path=/samba
-   valid user=@grp1
-   writeable=yes
-   ```
+5. Create a directory to be shared `mkdir -p /mnt/sambashare`
+6. Change modifications `chown -R root:grp1 /mnt/sambashare`
+7. Open config file with `vim /etc/samba/smb.conf`  
+   ![](https://imgur.com/8LlUi6F.png)
 8. Verify whether config file works with `testparm`
 9. Add users to the sambalist
     ```
@@ -135,11 +128,18 @@ Config file : `/etc/samba/smb.conf`
     smbpasswd -a u2
     smbpasswd -a u3
     ```
-10. Start `smb` service
-11. Verify for u1 from server
+10. Enable users
+    ```
+    smbpasswd -e u1
+    smbpasswd -e u2
+    smbpasswd -e u3
+    ```
+11. Start `smb` service
+12. Verify for u1 from server
     `smbclient -L localhost -U u1`
-12. To check on Linux client install `samba`, `samba-client`, `cifs-utils`
-13. To mount use `mount //<ipaddr>/<share-name> /<mountpoint> -o user=<username>`  
+13. To check on Linux client install `samba`, `samba-client`, `cifs-utils`
+14. Turn SELinux off  
+15. To mount use `mount -t cifs //<ipaddr>/<share-name> /<mountpoint> -o user=<username>`  
 
 ---  
 ## Part 7 - Apache Web Server  
@@ -148,10 +148,42 @@ Web server in Linux
 Used for hosting websites on Intranet or Internet  
 Packages : `httpd`  
 Service : `httpd`  
-Port : 80/tcp  
+Port : 80/tcp , 443/tcp
+Config file : `/etc/httpd/conf/httpd.conf`
 
-1. Install the packages
-2. Installs a service account called `apache`
-3. Start the `httpd` service
-4. To test whether it is working or not use `curl localhost`
-   ![](https://imgur.com/Xx7eL12.png)
+1. Install the packages  
+2. Installs a service account called `apache`  
+3. Start the `httpd` service  
+4. To test whether it is working or not use `curl localhost`  
+   ![](https://imgur.com/Xx7eL12.png)  
+5. Replace `/var/www/html/index.html` with your own website and reload to see your website being served  
+6. Now create two site in the `/var/www/` directory  with `mkdir -p /var/www/www.site{1..2}.com`
+7. Put `index.html` in both of those directories and slightly change their contents to differentiate between them
+8. Now tell the web server that you have two websites to serve by editing the config file  
+   > use `192.168.10.5 instead of loopback address`  
+   ![httpd.conf](https://imgur.com/07A29vf.png)
+9.  Make entires in `/etc/hosts` file
+    ```conf
+    192.168.10.5 www.site1.com
+    192.168.10.5 www.site2.com
+    ```
+10. To allow https connections 
+    1.  Install SSL packages 
+        `yum install -y mod_ssl openssh* openssl*`
+    2.  Create SSL certificate
+        - Go to location `/etc/pki/tls/certs`
+        - Create a key file `make <filename>.key`
+        - Create a CSR file `openssl rsa -in <filename>.key -out <filename>.key`
+        - Create a crt file `cp localhost.crt <filename>.crt`
+        - Create a new CSR file `make <filename>.csr`
+        - Validate and bind the certificate `openssl x509 -in <filename>.csr -out <filename>.crt -req -signkey <filename>.key -days 365`
+        - Configure SSL config file `/etc/httpd/conf.d/ssl.conf`
+          ```conf
+          <VirtualHost _default:443>
+          DocumentRoot '/<path-to-document-root>'
+          ServerName www.<websitename>.com:443
+
+          SSLCertificateFile
+          SSLCertificateKeyFile
+          ```
+    3. Restart httpd 
