@@ -150,7 +150,3 @@ Packages : `ftp`, `vsftpd`
 `put <filename>` - send file from local machine to remote server  
 `ls` - list files in server  
 `bye` - exit ftp server  
-
----
-## Part 7 - SSH  
----
