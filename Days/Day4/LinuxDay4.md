@@ -183,7 +183,7 @@ Config file : `/etc/httpd/conf/httpd.conf`
           DocumentRoot '/<path-to-document-root>'
           ServerName www.<websitename>.com:443
 
-          SSLCertificateFile
-          SSLCertificateKeyFile
+          SSLCertificateFile /<path-to-crt-file>
+          SSLCertificateKeyFile /<path-to-key-file>
           ```
     3. Restart httpd 
