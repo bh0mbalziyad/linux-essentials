@@ -52,6 +52,7 @@ Port : 53/tcp, 53/udp
 Service : `named`  
 Config : `/etc/named.conf`  
 
+
 1. Assign IP addresses to client and server and make sure they can ping
 2. Assign a domain based hostname to server
 3. Disable `squid` server and add port 53/tcp to firewall or turn the firewall off
@@ -136,4 +137,3 @@ Begin setup -
    quit
    ```
 9. Now that postfix is working we'll install dovecot
-   
