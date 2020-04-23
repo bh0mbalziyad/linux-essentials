@@ -3,7 +3,7 @@
 ## Part 1 - Networking
 ---  
 To configure network interfaces we can use the following utilities   
-`iconfig`  
+`ifconfig`  
 `nmcli`  
 `nmtui`  
 
@@ -30,7 +30,7 @@ You can also use `service <service> action` which is a legacy utility. It execut
 ---  
 Utilities for managing firewall -  
 `iptables` - IPv4  
-`ip6tables`  -  IPv6 traffice  
+`ip6tables`  -  IPv6 traffic  
 `netfilter` - IPv4  
 `firewall-cmd` - RHEL7
 
