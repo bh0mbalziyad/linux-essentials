@@ -86,9 +86,11 @@ Config : `/etc/named.conf`
 12. Set contents of `/etc/hosts` to default
 13. Now you have a working DNS, to verify use `dig <domain-name>`  
 
+
 ---
-Part 4 - SMTP  
+Part 4 - SMTP    
 ---
+
 Packages : `postfix`, `dovecot`, `squirrel`
 Ports : 25/tcp  
 Config : /etc/postfix/main.cf  
@@ -137,3 +139,27 @@ Begin setup -
    quit
    ```
 9. Now that postfix is working we'll install dovecot
+10. Packages for `dovecot` will be `dovecot`
+11. Go to /etc/dovecot/dovecot.conf
+    `Line 24 protocols = imap pop3 lmtp`
+12. Go to /etc/dovecot/conf.d/10-auth.conf
+    ```
+    line 24 mail_location = maildir:~/Maildir
+    line 10 disable_plaintext_auth = no
+    line 100 auth_mechanisms = plain login
+
+    ```
+13. Go to /etc/dovecot/conf.d/10-master.conf
+    `line 91 user = postfix`  
+    `line 92 group = postfix`
+14. Now restart `dovecot`
+15. To check, telnet into it
+    ```    
+    telnet localhost pop3
+    user u1
+    pass u1
+    list
+    retr 1
+    quit
+    ```
+16. If a mail is shown, then your `dovecot` setup is complete
